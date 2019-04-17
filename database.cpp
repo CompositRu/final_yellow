@@ -51,7 +51,7 @@ void Database::Print(ostream& os) const {
 int Database::RemoveIf(Predicate pred){
 	int count = 0;
 
-	//Удаление целых векторов контейнера map по дате
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ map пїЅпїЅ пїЅпїЅпїЅпїЅ
 	for (auto it = begin(storage); it != end(storage);){
 		if (pred(it->first, "")){
 			count += it->second.size();
@@ -61,8 +61,8 @@ int Database::RemoveIf(Predicate pred){
 		}
 	}
 
-	//Удаление элементов внутри векторов в контейнере map
-	//медленная версия. Надо реализовать через remove_if
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ map
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ remove_if
 	for (auto& [data, event_set] : storage) {
 		for (auto it = begin(event_set); it != end(event_set); ){
 			if (pred(data, *it)){
@@ -91,6 +91,10 @@ vector<pair<Date, string>> Database::FindIf(Predicate pred) const{
 string Database::Last(Date date){
 
 	return "12";
+}
+
+map<Date, set<string>> Database::GetStorage() const {
+  return storage;
 }
 
 Date ParseDate(istringstream& date_stream) {

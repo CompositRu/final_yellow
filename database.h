@@ -22,6 +22,7 @@ public:
   vector<pair<Date, string>>  FindIf  (Predicate pred) const;
   string 				Last	(Date date);
 
+  map<Date, set<string>> GetStorage() const;
 private:
   map<Date, set<string>> storage;
 };
@@ -31,3 +32,5 @@ Date ParseDate(const string& date);
 
 ostream& operator << (ostream& os, pair<Date, string> p);
 ostream& operator << (ostream& os, vector<pair<Date, string>> v);
+
+void TestDatabase();
