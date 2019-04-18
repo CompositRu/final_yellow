@@ -51,7 +51,7 @@ void Database::Print(ostream& os) const {
 int Database::RemoveIf(Predicate pred){
 	int count = 0;
 
-	//�������� ����� �������� ���������� map �� ����
+	//Delete dates
 	for (auto it = begin(storage); it != end(storage);){
 		if (pred(it->first, "")){
 			count += it->second.size();
@@ -61,8 +61,7 @@ int Database::RemoveIf(Predicate pred){
 		}
 	}
 
-	//�������� ��������� ������ �������� � ���������� map
-	//��������� ������. ���� ����������� ����� remove_if
+	//Delete element in vectors
 	for (auto& [data, event_set] : storage) {
 		for (auto it = begin(event_set); it != end(event_set); ){
 			if (pred(data, *it)){
