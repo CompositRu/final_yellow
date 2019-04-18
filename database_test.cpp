@@ -10,8 +10,8 @@ void TestDatabase() {
     //Test 1
     Database db;
     db.Add({2017,1,1}, "Happy NY");
-    map<Date, set<string>> expected;
-    expected[{2017,1,1}].insert("Happy NY");
+    map<Date, vector<string>> expected;
+    expected[{2017,1,1}].push_back("Happy NY");
     AssertEqual(db.GetStorage(), expected, "Add 1 element");
   }
   {
@@ -31,10 +31,10 @@ void TestDatabase() {
     int count = db.RemoveIf(predicate);
 
     AssertEqual(count, 2, "Remove 2 elements");
-    map<Date, set<string>> expected;
-    expected[{2016,1,1}].insert("1");
-    expected[{2016,12,31}].insert("2");
-    expected[{2017,7,1}].insert("5");
+    map<Date, vector<string>> expected;
+    expected[{2016,1,1}].push_back("1");
+    expected[{2016,12,31}].push_back("2");
+    expected[{2017,7,1}].push_back("5");
     AssertEqual(db.GetStorage(), expected,"Remove 2 elements");
   }
   {

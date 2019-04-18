@@ -11,15 +11,26 @@
 using namespace std;
 
 void Database::Add(const Date& date, const string& event) {
-        storage[date].insert(event);
+    bool flag = true;
+	for (const auto& item : storage[date]){
+    	if (event == item){
+    		flag = false;
+    	}
+    }
+	if (flag){
+		storage[date].push_back(event);
+	}
 }
 
 bool Database::DeleteEvent(const Date& date, const string& event) {
-        if (storage.count(date) > 0 && storage[date].count(event) > 0) {
-                storage[date].erase(event);
-                return true;
-        }
-        return false;
+	if (storage.count(date) > 0) {
+	    auto it = find(begin(storage[date]), end(storage[date]), event);
+		if (it != end(storage[date])){
+			storage[date].erase(it);
+			return true;
+		}
+	}
+	return false;
 }
 
 int Database::DeleteDate(const Date& date) {
@@ -32,7 +43,7 @@ int Database::DeleteDate(const Date& date) {
         }
 }
 
-set<string> Database::Find(const Date& date) const {
+vector<string> Database::Find(const Date& date) const {
         if (storage.count(date) > 0) {
                 return storage.at(date);
         } else {
@@ -62,8 +73,8 @@ int Database::RemoveIf(Predicate pred){
 	}
 
 	//Delete element in vectors
-	for (auto& [data, event_set] : storage) {
-		for (auto it = begin(event_set); it != end(event_set); ){
+	for (auto& [data, event_vector] : storage) {
+		for (auto it = begin(event_vector); it != end(event_vector); ){
 			if (pred(data, *it)){
 				count++;
 				it = event_set.erase(it);
@@ -72,6 +83,10 @@ int Database::RemoveIf(Predicate pred){
 			}
 		}
 	}
+
+	//Delete if vector is empty
+	//....
+
 	return count;
 }
 
@@ -88,11 +103,11 @@ vector<pair<Date, string>> Database::FindIf(Predicate pred) const{
 }
 
 string Database::Last(Date date){
-
+//	auto it = storage.lower_bound(date);
 	return "12";
 }
 
-map<Date, set<string>> Database::GetStorage() const {
+map<Date, vector<string>> Database::GetStorage() const {
   return storage;
 }
 
