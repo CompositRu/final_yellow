@@ -27,6 +27,7 @@ DateComparisonNode::DateComparisonNode(Comparison cmp, const Date& date)
 										: Node(cmp), date_(date) {}
 
 bool DateComparisonNode::Evaluate(const Date& date, const string& event) {
+//	cerr << "DateNode [" << date << "] " << Compare(cmp_, date, date_) << " [" << date_ << "]" << endl;
 	return Compare(cmp_, date, date_);
 }
 
@@ -35,6 +36,7 @@ EventComparisonNode::EventComparisonNode(Comparison cmp, const string& event)
 										: Node(cmp), event_(event) {}
 
 bool EventComparisonNode::Evaluate(const Date& date, const string& event) {
+//	cerr << "EventNode [" << event << "] " << Compare(cmp_, event, event_) << " [" << event_ << "]" << endl;
 	return Compare(cmp_, event, event_);
 }
 

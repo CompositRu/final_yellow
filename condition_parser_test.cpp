@@ -90,4 +90,18 @@ void TestParseCondition() {
     Assert(!root->Evaluate({2016, 1, 1}, "event"), "Parse condition 29");
     Assert(root->Evaluate({2016, 1, 2}, "event"), "Parse condition 30");
   }
+  {
+    istringstream is(R"(event != "a")");
+    shared_ptr<Node> root = ParseCondition(is);
+    Assert(root->Evaluate({2017, 1, 1}, "b"), "Parse condition 31");
+    Assert(!root->Evaluate({2017, 1, 1}, "a"), "Parse condition 32");
+
+  }
+  {
+    istringstream is(R"(event == "a")");
+    shared_ptr<Node> root = ParseCondition(is);
+    Assert(root->Evaluate({2017, 1, 1}, "a"), "Parse condition 33");
+    Assert(!root->Evaluate({2017, 1, 1}, "b"), "Parse condition 34");
+
+  }
 }

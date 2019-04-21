@@ -62,25 +62,37 @@ void Database::Print(ostream& os) const {
 int Database::RemoveIf(Predicate pred){
 	int count = 0;
 
-	//Delete dates
-	for (auto it = begin(storage); it != end(storage);){
-		if (pred(it->first, "")){
-			count += it->second.size();
-			it = storage.erase(it);
-		} else {
-			it++;
-		}
-	}
+//	//Delete dates
+//	for (auto it = begin(storage); it != end(storage);){
+////		cerr << "data delete  ";
+//		if (pred(it->first, "")){
+//			count += it->second.size();
+//			it = storage.erase(it);
+//		} else {
+//			it++;
+//		}
+//	}
 
 	//Delete element in vectors
-	for (auto& [data, event_vector] : storage) {
-		for (auto it = begin(event_vector); it != end(event_vector); ){
-			if (pred(data, *it)){
+	for (auto it_map = begin(storage); it_map != end(storage);) {
+		auto& date = it_map->first;
+		auto& event_vector = it_map->second;
+		for (auto it_event = begin(event_vector); it_event != end(event_vector); ){
+//тут можно удалять ф-ией ремувиф, чтобы ускорить
+			//			cerr << "event delete  ";
+			if (pred(date, *it_event)){
+//				cout << "Erase: {" << date << "} {" << *it_event << "} " << endl;
 				count++;
-				it = event_set.erase(it);
+				it_event = event_vector.erase(it_event);
 			} else {
-				it++;
+//				cout << "Don't erase: {" << date << "} {" << *it_event << "} " << endl;
+				it_event++;
 			}
+		}
+		if (event_vector.empty()){
+			it_map = storage.erase(it_map);
+		} else {
+			it_map++;
 		}
 	}
 
@@ -102,61 +114,26 @@ vector<pair<Date, string>> Database::FindIf(Predicate pred) const{
 	return result;
 }
 
-string Database::Last(Date date){
-//	auto it = storage.lower_bound(date);
-	return "12";
+string Database::Last(Date date) const{
+	auto it = storage.lower_bound(date);
+	if (it->first == date){
+		stringstream os;
+		os << it->first << " " << it->second.back();
+		return os.str();
+	} else { // (it->first > date)
+		if (it->first == storage.begin()->first){
+			throw invalid_argument("");
+		} else {
+			it--;
+			stringstream os;
+			os << it->first << " " << it->second.back();
+			return os.str();
+		}
+	}
 }
 
 map<Date, vector<string>> Database::GetStorage() const {
   return storage;
-}
-
-Date ParseDate(istringstream& date_stream) {
-        string date = date_stream.str();
-        bool ok = true;
-
-        int year;
-        ok = ok && (date_stream >> year);
-        ok = ok && (date_stream.peek() == '-');
-        date_stream.ignore(1);
-
-        int month;
-        ok = ok && (date_stream >> month);
-        ok = ok && (date_stream.peek() == '-');
-        date_stream.ignore(1);
-
-        int day;
-        ok = ok && (date_stream >> day);
-        ok = ok && date_stream.eof();
-
-        if (!ok) {
-                throw logic_error("Wrong date format: " + date);
-        }
-        return Date(year, month, day);
-}
-
-Date ParseDate(const string& date) {
-    stringstream date_stream(date);
-    bool ok = true;
-
-    int year;
-    ok = ok && (date_stream >> year);
-    ok = ok && (date_stream.peek() == '-');
-    date_stream.ignore(1);
-
-    int month;
-    ok = ok && (date_stream >> month);
-    ok = ok && (date_stream.peek() == '-');
-    date_stream.ignore(1);
-
-    int day;
-    ok = ok && (date_stream >> day);
-    ok = ok && date_stream.eof();
-
-    if (!ok) {
-            throw logic_error("Wrong date format: " + date);
-    }
-    return Date(year, month, day);
 }
 
 ostream& operator << (ostream& os, pair<Date, string> p){

@@ -99,4 +99,5 @@ void TestAll() {
   tr.RunTest(TestParseEvent, "TestParseEvent");
   tr.RunTest(TestParseCondition, "TestParseCondition");
   tr.RunTest(TestDatabase, "TestDatabase");
+  tr.RunTest(TestDateComparison, "TestDate");
 }

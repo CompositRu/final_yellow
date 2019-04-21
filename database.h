@@ -21,17 +21,15 @@ public:
   void 		  	Print	   (ostream& os) const;
   int 					RemoveIf(Predicate pred);
   vector<pair<Date, string>>  FindIf  (Predicate pred) const;
-  string 				Last	(Date date);
+  string 				Last	(Date date) const;
 
   map<Date, vector<string>> GetStorage() const;
 private:
   map<Date, vector<string>> storage;
 };
 
-Date ParseDate(istringstream& date_stream);
-Date ParseDate(const string& date);
-
 ostream& operator << (ostream& os, pair<Date, string> p);
 ostream& operator << (ostream& os, vector<pair<Date, string>> v);
 
 void TestDatabase();
+void TestDateComparison();
