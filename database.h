@@ -12,12 +12,14 @@
 using namespace std;
 using Predicate = function<bool(const Date&, const string&)>;
 
+struct VectorSetStorage {
+	vector<string> 	event_vector;
+	set<string> 	event_set;
+};
+
 class Database {
 public:
   void 		  	Add		   (const Date& date, const string& event);
-  bool 		  	DeleteEvent(const Date& date, const string& event);
-  int 		  	DeleteDate (const Date& date);
-  vector<string> 	Find	   (const Date& date) const;
   void 		  	Print	   (ostream& os) const;
   int 					RemoveIf(Predicate pred);
   vector<pair<Date, string>>  FindIf  (Predicate pred) const;
@@ -25,7 +27,7 @@ public:
 
   map<Date, vector<string>> GetStorage() const;
 private:
-  map<Date, vector<string>> storage;
+  map<Date, VectorSetStorage> storage;
 };
 
 ostream& operator << (ostream& os, pair<Date, string> p);
