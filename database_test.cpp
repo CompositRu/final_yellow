@@ -137,6 +137,9 @@ void TestDatabase() {
 
       AssertEqual(db.GetStorage(), expected,"Condition 7");
   }
+  //надо добавить сложные тесты, где комбинируются методы
+  //например:
+  //add, add, del, add, last
 }
 
 void TestDateComparison() {

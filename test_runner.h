@@ -74,6 +74,9 @@ public:
 	} catch (runtime_error& e) {
 	  ++fail_count;
 	  cerr << test_name << " fail: " << e.what() << endl;
+	} catch (exception& e) {
+	  ++fail_count;
+	  cerr << "noname exception!"<< test_name << " fail: " << e.what() << endl;
 	}
   }
 

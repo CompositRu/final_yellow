@@ -8,18 +8,12 @@
 #include "database.h"
 #include "date.h"
 
+#include "test_runner.h"
+
 using namespace std;
 
 void Database::Add(const Date& date, const string& event) {
 	auto [iter, flag] = storage[date].event_set.insert(event);
-
-
-//	bool flag = true;
-//	for (const auto& item : storage[date] ){
-//    	if (event == item){
-//    		flag = false;
-//    	}
-//    }
 	if (flag){
 		storage[date].event_vector.push_back(event);
 	}
@@ -33,12 +27,23 @@ void Database::Print(ostream& os) const {
 	}
 }
 
+void RemoveIf_for_set(set<string>& s, const Date& d, Predicate pred){
+	for (auto it = begin(s); it != end(s);){
+		if (pred(d, *it)){
+			it = s.erase(it);
+		} else {
+			it++;
+		}
+	}
+}
+
 int Database::RemoveIf(Predicate pred){
 	int count = 0;
 
-	for (auto& it_map = begin(storage); it_map != end(storage);) {
+	for (auto it_map = begin(storage); it_map != end(storage);) {
 		auto& date = it_map->first;
 		auto& event_vector = it_map->second.event_vector;
+		auto& event_set = it_map->second.event_set;
 		int s1 = event_vector.size();
 		auto it = stable_partition(event_vector.begin(), event_vector.end(),
 									[pred, date](string event){
@@ -48,12 +53,11 @@ int Database::RemoveIf(Predicate pred){
 		int s2 = event_vector.size();
 		count += s1 - s2;
 
-		//надо ещё из set удалить
-
 		if (event_vector.empty()){
 			it_map = storage.erase(it_map);
 		} else {
 			it_map++;
+			RemoveIf_for_set(event_set, date, pred);
 		}
 	}
 	return count;
@@ -89,7 +93,7 @@ string Database::Last(Date date) const{
 		} else {
 			it--;
 			stringstream os;
-			os << storage_date << " " << event_vector.back();
+			os << it->first << " " << it->second.event_vector.back();
 			return os.str();
 		}
 	}
@@ -97,10 +101,12 @@ string Database::Last(Date date) const{
 
 map<Date, vector<string>> Database::GetStorage() const {
 	map<Date, vector<string>> result;
-	for (auto& it_map = begin(storage); it_map != end(storage); it_map++){
-		result.insert(make_pair(it_map->first, it_map->second.event_vector));
+	for (auto it_map = begin(storage); it_map != end(storage); it_map++){
+		pair<Date, vector<string>> p(it_map->first,{});
+		p.second = storage.at(it_map->first).event_vector;
+		result.insert(p);
 	}
-	return storage;
+	return result;
 }
 
 ostream& operator << (ostream& os, pair<Date, string> p){
